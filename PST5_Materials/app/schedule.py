@@ -20,32 +20,46 @@ class ScheduleManager:
             with open(self.data_path, 'r') as f:
                 data = json.load(f)
                 
-                # Load Students
+                # --- Load Students ---
                 for s in data.get('students', []):
-                    self.students.append(StudentUser(**s))
+                    # Map "id" to "user_id" to match your StudentUser class
+                    s_id = s.get('id') or s.get('user_id')
+                    s_name = s.get('name', 'Unknown')
+                    student_obj = StudentUser(user_id=s_id, name=s_name)
+                    student_obj.enrolled_course_ids = s.get('enrolled_course_ids', [])
+                    self.students.append(student_obj)
                     
-                # Load Teachers
+                # --- Load Teachers ---
                 for t in data.get('teachers', []):
-                    self.teachers.append(TeacherUser(**t))
+                    t_id = t.get('id') or t.get('user_id')
+                    t_name = t.get('name', 'Unknown')
+                    t_spec = t.get('speciality', 'General')
+                    self.teachers.append(TeacherUser(user_id=t_id, name=t_name, speciality=t_spec))
                     
-                # Load Courses
+                # --- Load Courses ---
                 for c in data.get('courses', []):
-                    self.courses.append(Course(**c))
+                    self.courses.append(Course(
+                        c.get('course_id', c.get('id')), 
+                        c.get('name'), 
+                        c.get('instrument', 'General'), 
+                        c.get('teacher_id')
+                    ))
                     
-                # Load Finance Log (NEW for PST5)
+                # --- Load Finance Log ---
                 self.finance_log = data.get('finance_log', [])
                 
         except FileNotFoundError:
             print("Data file not found. Starting with a clean state.")
+        except Exception as e:
+            print(f"Error loading data: {e}")
     
     def _save_data(self):
         """Converts object lists back to dictionaries and saves to JSON."""
-        # Convert objects to dictionaries. We use vars() which turns an object into a dict.
         data_to_save = {
             "students": [vars(s) for s in self.students],
             "teachers": [vars(t) for t in self.teachers],
             "courses": [vars(c) for c in self.courses],
-            "finance_log": self.finance_log  # <-- Save finance log (NEW for PST5)
+            "finance_log": self.finance_log
         }
         
         with open(self.data_path, 'w') as f:
@@ -53,18 +67,15 @@ class ScheduleManager:
 
     def create_course(self, name, instrument, teacher_id):
         """Create a new course, generate an ID, and save it."""
-        # Automatically generate an ID based on how many courses exist
         course_id = len(self.courses) + 1 
-        
-        # Now we pass all 4 arguments to match your Course class
         new_course = Course(course_id, name, instrument, teacher_id)
-        
         self.courses.append(new_course)
         self._save_data()
         return new_course
     
-    # PST5 Payment Sector
-    # record payment
+    # ==========================================
+    # PST5 FINANCE METHODS
+    # ==========================================
     def record_payment(self, student_id, amount, method):
         """Record a payment from a student."""
         payment = {
@@ -76,7 +87,6 @@ class ScheduleManager:
         self._save_data()
         return payment
 
-    # get payment history
     def get_payment_history(self, student_id):
         """Return all payments for a specific student."""
         return [p for p in self.finance_log if p["student_id"] == student_id]
