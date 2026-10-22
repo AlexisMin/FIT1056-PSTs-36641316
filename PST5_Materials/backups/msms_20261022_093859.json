@@ -1,0 +1,71 @@
+{
+    "students": [
+        {
+            "id": 1,
+            "name": "Alice Johnson",
+            "enrolled_course_ids": [
+                101,
+                103
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Bob Williams",
+            "enrolled_course_ids": [
+                102
+            ]
+        }
+    ],
+    "teachers": [
+        {
+            "id": 1,
+            "name": "Dr. Evelyn Keys",
+            "speciality": "Piano"
+        },
+        {
+            "id": 2,
+            "name": "Mr. David Fret",
+            "speciality": "Guitar"
+        }
+    ],
+    "courses": [
+        {
+            "id": 101,
+            "name": "Beginner Piano",
+            "instrument": "Piano",
+            "teacher_id": 1,
+            "enrolled_student_ids": [
+                2
+            ],
+            "lessons": []
+        },
+        {
+            "id": 102,
+            "name": "Acoustic Guitar Fundamentals",
+            "instrument": "Guitar",
+            "teacher_id": 2,
+            "enrolled_student_ids": [],
+            "lessons": []
+        },
+        {
+            "id": 103,
+            "name": "Intermediate Piano",
+            "instrument": "Piano",
+            "teacher_id": 1,
+            "enrolled_student_ids": [],
+            "lessons": []
+        }
+    ],
+    "finance_log": [
+        {
+            "student_id": 1,
+            "amount": 2.8,
+            "method": "Bank Transfer"
+        },
+        {
+            "student_id": 1,
+            "amount": 100.0,
+            "method": "Cash"
+        }
+    ]
+}

@@ -34,7 +34,10 @@
             "name": "Beginner Piano",
             "instrument": "Piano",
             "teacher_id": 1,
-            "enrolled_student_ids": [],
+            "enrolled_student_ids": [
+                2,
+                1
+            ],
             "lessons": []
         },
         {
@@ -42,7 +45,9 @@
             "name": "Acoustic Guitar Fundamentals",
             "instrument": "Guitar",
             "teacher_id": 2,
-            "enrolled_student_ids": [],
+            "enrolled_student_ids": [
+                1
+            ],
             "lessons": []
         },
         {
@@ -59,6 +64,11 @@
             "student_id": 1,
             "amount": 2.8,
             "method": "Bank Transfer"
+        },
+        {
+            "student_id": 1,
+            "amount": 100.0,
+            "method": "Cash"
         }
     ]
 }

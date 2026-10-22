@@ -22,7 +22,6 @@ class ScheduleManager:
                 
                 # --- Load Students ---
                 for s in data.get('students', []):
-                    # Map "id" to "user_id" to match your StudentUser class
                     s_id = s.get('id') or s.get('user_id')
                     s_name = s.get('name', 'Unknown')
                     student_obj = StudentUser(user_id=s_id, name=s_name)
@@ -90,3 +89,22 @@ class ScheduleManager:
     def get_payment_history(self, student_id):
         """Return all payments for a specific student."""
         return [p for p in self.finance_log if p["student_id"] == student_id]
+
+    # ==========================================
+    # PST4 ROSTER METHOD (Restored)
+    # ==========================================
+    def check_in(self, student_id, course_id):
+        """Check a student into a course for the Daily Roster."""
+        # Find the course
+        course = next((c for c in self.courses if str(c.id) == str(course_id)), None)
+        
+        if not course:
+            return False, "Course not found."
+            
+        # Check if they are already enrolled
+        if student_id not in course.enrolled_student_ids:
+            course.enrolled_student_ids.append(student_id)
+            self._save_data()  # Save changes to JSON
+            return True, "Student checked in successfully."
+            
+        return False, "Student is already checked in for this course."
